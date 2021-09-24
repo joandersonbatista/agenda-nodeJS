@@ -1,4 +1,4 @@
-const Login = require('../models/loginModel');
+const Login = require('../models/LoginModel');
 
 exports.index = (req, res) => {
   console.log(req.session.user);
@@ -30,6 +30,7 @@ exports.login = (req, res) => {
     } else {
       req.flash('success', 'Logado com sucesso');
       req.session.user = login.user;
+      res.locals.user = req.session.user;
       res.redirect('/');
       /* req.session.save(() => res.redirect('/login/index')); */
       /* res.send(login.body); */

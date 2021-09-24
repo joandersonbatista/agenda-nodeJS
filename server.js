@@ -1,30 +1,29 @@
 require('dotenv').config();
 const express = require('express');
 
+const app = express();
 const mongoose = require('mongoose');
+
+mongoose.connect(process.env.CONNECTSTRING,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  })
+  .then(() => {
+    app.emit('pronto');
+  })
+  .catch((e) => console.log(e));
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 const path = require('path');
-const helmet = require('helmet');
+// const helmet = require('helmet'); // helmet começou a causar problemas no localhost por conta da falta de SSL
 const csrf = require('csurf');
 const routes = require('./routes');
-const {
-  middlewareGlobal,
-  checkCsrfError,
-  csrfMiddleware,
-} = require('./src/middlewares/middleware');
+const { middlewareGlobal, checkCsrfError, csrfMiddleware } = require('./src/middlewares/middleware');
 
-const app = express();
-
-mongoose.connect(
-  process.env.CONNECTSTRING,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-).then(() => {
-  app.emit('pronto');
-}).catch((e) => console.log(e));
-
-app.use(helmet());
+// app.use(helmet()); // helmet começou a causar problemas no localhost por conta da falta de SSL
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -40,7 +39,6 @@ const sessionOptions = session({
     httpOnly: true,
   },
 });
-
 app.use(sessionOptions);
 app.use(flash());
 
@@ -56,7 +54,7 @@ app.use(routes);
 
 app.on('pronto', () => {
   app.listen(3000, () => {
-    console.log('Acessar http://localhost:3000/');
+    console.log('Acessar http://localhost:3000');
     console.log('Servidor executando na porta 3000');
   });
 });
