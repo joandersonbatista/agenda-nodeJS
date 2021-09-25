@@ -18,7 +18,8 @@ const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const flash = require('connect-flash');
 const path = require('path');
-// const helmet = require('helmet'); // helmet começou a causar problemas no localhost por conta da falta de SSL
+// const helmet = require('helmet');
+// helmet começou a causar problemas no localhost por conta da falta de SSL
 const csrf = require('csurf');
 const routes = require('./routes');
 const { middlewareGlobal, checkCsrfError, csrfMiddleware } = require('./src/middlewares/middleware');
